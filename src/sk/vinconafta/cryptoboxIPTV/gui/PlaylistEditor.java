@@ -43,9 +43,11 @@ public class PlaylistEditor {
             public void mouseClicked(MouseEvent e) {
                 if (!list1.isSelectionEmpty()) {
                     String novyNazov = JOptionPane.showInputDialog(null, "Zadajte nový názov kanála", "Zmena názvu kanala", JOptionPane.QUESTION_MESSAGE);
-                    novyNazov = novyNazov.replaceAll(" ", "_");
-                    streams.at(list1.getSelectedIndex()).setChannelName(novyNazov);
-                    reloadChannels();
+                    if (novyNazov != null) {
+                        novyNazov = novyNazov.replaceAll(" ", "_");
+                        streams.at(list1.getSelectedIndex()).setChannelName(novyNazov);
+                        reloadChannels();
+                    }
                 }
 
             }
@@ -60,10 +62,10 @@ public class PlaylistEditor {
             @Override
             public void mouseClicked(MouseEvent e) {
                 String newChannelName = JOptionPane.showInputDialog(null, "Zadajte názov nového Kanálu");
-                if (newChannelName != null || !newChannelName.isEmpty()) {
+                if (newChannelName != null) {
                     newChannelName = newChannelName.replaceAll(" ", "_");
                     String stream = JOptionPane.showInputDialog(null, "Zadajte stream nového Kanálu");
-                    if (stream != null || !stream.isEmpty()) {
+                    if (stream != null) {
                         streams.add(new IPTVstream(newChannelName, stream));
                         reloadChannels();
                     }
