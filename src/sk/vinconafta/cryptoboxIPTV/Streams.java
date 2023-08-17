@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class Streams {
     private final List<IPTVstream> iptVstreams;
+    private static final int maxChannels = 2000;
 
     public Streams() {
         this.iptVstreams = new ArrayList<>();
@@ -56,19 +57,22 @@ public class Streams {
     }
 
     public void tryToExportToCFG() {
-        if (this.iptVstreams.size() > 16) {
-            JOptionPane.showMessageDialog(null, "Súbor má viac ako 16 streamov. \nNačítanie dát v cryptoboxe môže zlyhať", "UPOZORNENIE !", JOptionPane.WARNING_MESSAGE);
-        }
-        File exportFile = new File("iptv.cfg");
-        if (exportFile.exists()) {
-            int response = JOptionPane.showConfirmDialog(null, "Súbor s exportom už exituje.\nChcete prepísať existujuci cfg súbor?", "Prepis CFG", JOptionPane.YES_NO_OPTION);
+        if (this.iptVstreams.size() <= maxChannels) {
+            if (this.iptVstreams.size() > 16) {
+                JOptionPane.showMessageDialog(null, "Súbor má viac ako 16 streamov. \nNačítanie dát v cryptoboxe môže zlyhať", "UPOZORNENIE !", JOptionPane.WARNING_MESSAGE);
+            }
+            File exportFile = new File("iptv.cfg");
+            if (exportFile.exists()) {
+                int response = JOptionPane.showConfirmDialog(null, "Súbor s exportom už exituje.\nChcete prepísať existujuci cfg súbor?", "Prepis CFG", JOptionPane.YES_NO_OPTION);
 //            System.out.println(response);
-            if (response == 0) {
+                if (response == 0) {
+                    export(exportFile);
+                }
+            } else {
                 export(exportFile);
             }
-        }
-        else {
-            export(exportFile);
+        } else {
+            JOptionPane.showMessageDialog(null, "Cryptobox spracuje maximálne " + maxChannels +  "kanálov. \nOdstránte niektoré programy aby ste dosiahli daný počet programov", "Export sa nepodaril", JOptionPane.ERROR_MESSAGE);
         }
     }
     private void export(File f) {
