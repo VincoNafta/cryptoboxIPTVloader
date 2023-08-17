@@ -3,12 +3,10 @@ package sk.vinconafta.cryptoboxIPTV.gui;
 import sk.vinconafta.cryptoboxIPTV.IPTVstream;
 import sk.vinconafta.cryptoboxIPTV.Streams;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -19,6 +17,7 @@ public class PlaylistEditor {
     private JPanel mainPanel;
     private JList list1;
     private JButton pridajKanalButton;
+    private JButton addMore;
     private final Streams streams;
 
     public PlaylistEditor(Streams streams) {
@@ -29,12 +28,15 @@ public class PlaylistEditor {
 
         frame.setVisible(true);
         frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         odstranKanalButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (!list1.isSelectionEmpty()) {
                     streams.removeOnIndex(list1.getSelectedIndex());
                     reloadChannels();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Musíte kliknuť na kanal ktorý chcete zmazať", "Neplatny vyber", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -70,6 +72,24 @@ public class PlaylistEditor {
                         reloadChannels();
                     }
                 }
+            }
+        });
+        addMore.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("m3u & m3u8 playlist", "m3u8", "m3u");
+                chooser.setFileFilter(filter);
+                chooser.setDialogTitle("Výber súboru");
+                chooser.setDialogType(JFileChooser.OPEN_DIALOG);
+                chooser.setVisible(true);
+                chooser.showOpenDialog(null);
+
+//                System.out.println(chooser.getSelectedFile());
+                if (chooser.getSelectedFile() != null) {
+                    streams.readFromFile(chooser.getSelectedFile());
+                }
+                reloadChannels();
             }
         });
     }

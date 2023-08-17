@@ -19,6 +19,7 @@ public class Menu {
         frame.setContentPane(this.main);
         frame.setVisible(true);
         frame.pack();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.streams = new Streams();
         finitoButton.addMouseListener(new MouseAdapter() {
             @Override
